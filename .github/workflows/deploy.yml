@@ -1,0 +1,84 @@
+name: Deploy in cluster kubernetes
+
+on:
+  workflow_call:
+    inputs:
+      project-name:
+        required: true
+        type: string
+      build-directory:
+        required: false
+        type: string
+        default: 'dist'
+      build-command:
+        required: false
+        type: string
+        default: 'npm run build'
+      branch:
+        required: false
+        type: string
+        default: 'main'
+      destroy:
+        required: false
+        type: boolean
+        default: false
+    secrets:
+      account-id:
+        required: true 
+      cloudflare-token:
+        required: true
+      github-token:
+        required: true
+      snow-token: 
+        required: false
+    outputs:
+      static-website-url:
+        description: The URL of the deployed static website
+        value: ${{ jobs.deploy-static-webpage.outputs.url  }}
+     
+    
+   
+jobs:
+
+  deploy-static-website: 
+    runs-on: ubuntu-22.04
+    outputs:
+      url: ${{ steps.cloud-flare.outputs.url }}
+    name: Deploy
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+
+      # checkout app repository
+      - uses: actions/checkout@v4
+
+      # Set up Astro Cloudflare Pages
+
+      # Set up Cloudflare Wrangler CLI
+      - name: Deploy
+        id: wrangler-action
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.cloudflare-token }}
+          accountId: ${{ secrets.account-id }}
+          command: |
+            pages project create ${{ inputs.project-name  }}  --production-branch=${{ inputs.branch  }}
+            pages deploy ./${{ inputs.build-directory  }} --project-name ${{ inputs.project-name  }} --branch ${{ inputs.branch  }}
+          captureOutput: true
+          gitHubToken: ${{ secrets.github-token }}
+
+      # Set output URL
+      - name: Set output URL
+        id: cloud-flare
+        run: |
+          urls=$(echo "${{ steps.wrangler-action.outputs.output }}" | grep -oP 'https?://[^\s]+')
+          echo "$urls"
+          url_count=$(echo "$urls" | wc -l)
+          if [ "$url_count" -lt 2 ]; then
+            echo "Error: Could not find two URLs in the string."
+            exit 1
+          fi
+          echo "url=$(echo "$urls" | sed -n '1p')" >> "$GITHUB_OUTPUT"
+
+      # notify snow monkeys
