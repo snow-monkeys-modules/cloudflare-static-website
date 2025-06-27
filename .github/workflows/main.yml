@@ -117,6 +117,6 @@ jobs:
           echo "Extracted URLs: $urls"
           url1=$(echo "$urls" | sed -n '1p')
           echo "Extracted URL: $url1"
-          echo "static_webpage_url=$url1")" >> "$GITHUB_OUTPUT"
+          echo "static_webpage_url=$url1" >> "$GITHUB_OUTPUT"
 
       # notify snow monkeys
