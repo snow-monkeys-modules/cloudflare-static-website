@@ -57,6 +57,13 @@ jobs:
           npm install wrangler@latest --save-dev
           npx astro add cloudflare
           npm install
+
+      # Set up React & Cloudflare Pages
+      - name: Setup project for react
+        if: ${{ inputs.framework == 'react' }}
+        run: |
+          npm install wrangler@latest --save-dev
+          npm install
         
       # Set up Angular & Cloudflare Pages
       - name: Setup project for angular
