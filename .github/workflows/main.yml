@@ -3,6 +3,10 @@ name: Deploy in cluster kubernetes
 on:
   workflow_call:
     inputs:
+      framework:
+        required: true
+        type: string
+        default: 'astro'
       project-name:
         required: true
         type: string
@@ -27,33 +31,58 @@ on:
         required: true 
       cloudflare-token:
         required: true
-      github-token:
-        required: true
       snow-token: 
         required: false
     outputs:
-      static-website-url:
-        description: The URL of the deployed static website
-        value: ${{ jobs.deploy-static-webpage.outputs.url  }}
-     
-    
+      static_webpage_url:
+        description: 'The URL of the deployed static webpage'
+        value: ${{ jobs.deploy-static-webpage.outputs.static_webpage_url }}
    
 jobs:
 
-  deploy-static-website: 
+  deploy-static-webpage: 
     runs-on: ubuntu-22.04
     outputs:
-      url: ${{ steps.cloud-flare.outputs.url }}
-    name: Deploy
-    permissions:
-      contents: read
-      deployments: write
+      static_webpage_url: ${{ steps.cloud-flare.outputs.static_webpage_url }}
+    
     steps:
 
       # checkout app repository
       - uses: actions/checkout@v4
 
-      # Set up Astro Cloudflare Pages
+      # Set up Astro & Cloudflare Pages
+      - name: Setup project for astro
+        if: ${{ inputs.framework == 'astro' }}
+        run: |
+          npm install wrangler@latest --save-dev
+          npx astro add cloudflare
+          npm install
+        
+      # Set up Angular & Cloudflare Pages
+      - name: Setup project for angular
+        if: ${{ inputs.framework == 'angular' }}
+        run: |
+          npm install wrangler@latest --save-dev
+          npm install
+          
+      # Set up Next & Cloudflare Pages
+      - name: Setup project for next
+        if: ${{ inputs.framework == 'next' }}
+        run: |
+          npm install wrangler@latest --save-dev
+          npm install
+
+      # Set up Vue & Cloudflare Pages
+      - name: Setup project for vue
+        if: ${{ inputs.framework == 'vue' }}
+        run: |
+          npm install wrangler@latest --save-dev
+          npm install
+      
+      - name: Build project
+        run: |
+          echo "Building project with command: ${{ inputs.build-command }}"
+          ${{ inputs.build-command  }}
 
       # Create project
       - name: Create project
@@ -82,6 +111,8 @@ jobs:
         id: cloud-flare
         run: |
           urls=$(echo "${{ steps.wrangler-action.outputs.command-output }}" | grep -oP 'https?://[^\s]+')
-          echo "url=$(echo "$urls" | sed -n '1p')" >> "$GITHUB_OUTPUT"
+          url1=$(echo "$urls" | sed -n '1p')
+          echo "Extracted URL: $url1"
+          echo "static_webpage_url=$url1")" >> "$GITHUB_OUTPUT"
 
       # notify snow monkeys
