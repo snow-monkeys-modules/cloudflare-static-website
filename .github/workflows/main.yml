@@ -75,14 +75,13 @@ jobs:
           accountId: ${{ secrets.account-id }}
           command: |
             pages deploy ./${{ inputs.build-directory  }} --project-name ${{ inputs.project-name  }} --branch ${{ inputs.branch  }}
-          captureOutput: true
           gitHubToken: ${{ secrets.github-token }}
 
       # Set output URL
       - name: Set output URL
         id: cloud-flare
         run: |
-          urls=$(echo "${{ steps.wrangler-action.outputs.output }}" | grep -oP 'https?://[^\s]+')
+          urls=$(echo "${{ steps.wrangler-action.outputs.command-output }}" | grep -oP 'https?://[^\s]+')
           echo "url=$(echo "$urls" | sed -n '1p')" >> "$GITHUB_OUTPUT"
 
       # notify snow monkeys
