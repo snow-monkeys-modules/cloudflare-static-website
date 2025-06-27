@@ -75,7 +75,6 @@ jobs:
           accountId: ${{ secrets.account-id }}
           command: |
             pages deploy ./${{ inputs.build-directory  }} --project-name ${{ inputs.project-name  }} --branch ${{ inputs.branch  }}
-          gitHubToken: ${{ secrets.github-token }}
           captureOutput: true
 
       # Set output URL
