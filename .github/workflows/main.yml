@@ -73,12 +73,6 @@ jobs:
         id: cloud-flare
         run: |
           urls=$(echo "${{ steps.wrangler-action.outputs.output }}" | grep -oP 'https?://[^\s]+')
-          echo "$urls"
-          url_count=$(echo "$urls" | wc -l)
-          if [ "$url_count" -lt 2 ]; then
-            echo "Error: Could not find two URLs in the string."
-            exit 1
-          fi
           echo "url=$(echo "$urls" | sed -n '1p')" >> "$GITHUB_OUTPUT"
 
       # notify snow monkeys
