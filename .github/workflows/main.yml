@@ -54,8 +54,8 @@ jobs:
       - name: Setup project for astro
         if: ${{ inputs.framework == 'astro' }}
         run: |
-          npm install wrangler@latest --save-dev -y
-          npx astro add cloudflare -y
+          npm install wrangler@latest --save-dev
+          npx astro add cloudflare
           npm install
         
       # Set up Angular & Cloudflare Pages
