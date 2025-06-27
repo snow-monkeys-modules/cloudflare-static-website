@@ -69,21 +69,21 @@ jobs:
       - name: Setup project for angular
         if: ${{ inputs.framework == 'angular' }}
         run: |
-          npm install wrangler@latest --save-dev -y
+          npm install wrangler@latest --save-dev
           npm install
           
       # Set up Next & Cloudflare Pages
       - name: Setup project for next
         if: ${{ inputs.framework == 'next' }}
         run: |
-          npm install wrangler@latest --save-dev -y
+          npm install wrangler@latest --save-dev
           npm install
 
       # Set up Vue & Cloudflare Pages
       - name: Setup project for vue
         if: ${{ inputs.framework == 'vue' }}
         run: |
-          npm install wrangler@latest --save-dev -y
+          npm install wrangler@latest --save-dev
           npm install
       
       - name: Build project
