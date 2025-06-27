@@ -54,35 +54,38 @@ jobs:
       - name: Setup project for astro
         if: ${{ inputs.framework == 'astro' }}
         run: |
-          npm install wrangler@latest --save-dev
-          npx astro add cloudflare
+          npm install wrangler@latest --save-dev -y
+          npx astro add cloudflare -y
           npm install
         
       # Set up Angular & Cloudflare Pages
       - name: Setup project for angular
         if: ${{ inputs.framework == 'angular' }}
         run: |
-          npm install wrangler@latest --save-dev
+          npm install wrangler@latest --save-dev -y
           npm install
           
       # Set up Next & Cloudflare Pages
       - name: Setup project for next
         if: ${{ inputs.framework == 'next' }}
         run: |
-          npm install wrangler@latest --save-dev
+          npm install wrangler@latest --save-dev -y
           npm install
 
       # Set up Vue & Cloudflare Pages
       - name: Setup project for vue
         if: ${{ inputs.framework == 'vue' }}
         run: |
-          npm install wrangler@latest --save-dev
+          npm install wrangler@latest --save-dev -y
           npm install
       
       - name: Build project
         run: |
           echo "Building project with command: ${{ inputs.build-command }}"
           ${{ inputs.build-command  }}
+          echo "---------------------"
+          ls
+          echo "---------------------"
 
       # Create project
       - name: Create project
@@ -92,7 +95,7 @@ jobs:
           apiToken: ${{ secrets.cloudflare-token }}
           accountId: ${{ secrets.account-id }}
           command: |
-            pages project create ${{ inputs.project-name  }}  --production-branch=${{ inputs.branch  }}
+            pages project create ${{ inputs.project-name }} --production-branch=${{ inputs.branch }}
          
 
       # Deploy
@@ -103,7 +106,7 @@ jobs:
           apiToken: ${{ secrets.cloudflare-token }}
           accountId: ${{ secrets.account-id }}
           command: |
-            pages deploy ./${{ inputs.build-directory  }} --project-name ${{ inputs.project-name  }} --branch ${{ inputs.branch  }}
+            pages deploy ./${{ inputs.build-directory }} --project-name ${{ inputs.project-name }} --branch ${{ inputs.branch }}
           captureOutput: true
 
       # Set output URL
@@ -111,6 +114,7 @@ jobs:
         id: cloud-flare
         run: |
           urls=$(echo "${{ steps.wrangler-action.outputs.command-output }}" | grep -oP 'https?://[^\s]+')
+          echo "Extracted URLs: $urls"
           url1=$(echo "$urls" | sed -n '1p')
           echo "Extracted URL: $url1"
           echo "static_webpage_url=$url1")" >> "$GITHUB_OUTPUT"
