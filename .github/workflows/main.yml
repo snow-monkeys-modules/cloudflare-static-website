@@ -18,10 +18,6 @@ on:
         required: false
         type: string
         default: 'npm run build'
-      branch:
-        required: false
-        type: string
-        default: 'main'
       destroy:
         required: false
         type: boolean
