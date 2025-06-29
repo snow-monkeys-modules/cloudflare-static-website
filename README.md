@@ -1,4 +1,4 @@
-### Cloudflare Web Pages
+## Cloudflare Web Pages
 
 This Module helps us deploy a static page using Cloudflare Pages. The module requires proper credentials before use.
 
@@ -51,19 +51,18 @@ jobs:
 Required inputs:
 
 - [`framework`](#required-inputs) (String) The framework is based the application. Available value: "react", "angular", "astro", "next.js".
-- [`project-name`](required-inputs) (String) Project name also used as application name for Cloudflare Pages.
+- [`project-name`](#required-inputs) (String) Project name also used as application name for Cloudflare Pages.
 
 Optional inputs:
 
-- [`build-directory`](optional-inputs) (String) The build directory in framework. Default: "dist" 
+- [`build-directory`](#optional-inputs) (String) The build directory in framework. Default: "dist" 
 - [`build-command`](#optional-inputs) (String) Build command to generate the distribution javascript bundle. Default: "npm run build"
-- [`zone_id`](https://registry.terraform.io/providers/cloudflare/cloudflare/latest/docs/resources/access_rule#zone_id-1) (String) The Zone ID to use for this endpoint. Mutually exclusive with the Account ID.
 
 Secrets:
 
 - [`account-id`](#secrets) (String) Cloudflare account id.
-- [`cloudflare-token`](secrets) (String) Cloudflare API token with proper permissions.
-- [`snow-token`](secrets) (String) Cloudflare API token with proper permissions.
+- [`cloudflare-token`](#secrets) (String) Cloudflare API token with proper permissions.
+- [`snow-token`](#secrets) (String) Cloudflare API token with proper permissions.
 
 Outputs:
 
