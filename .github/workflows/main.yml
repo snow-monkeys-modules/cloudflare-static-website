@@ -58,6 +58,9 @@ jobs:
       - name: Setup project for react
         if: ${{ inputs.framework == 'react' }}
         run: |
+          echo "--- display files in root ---"
+          ls
+          echo "--- end display files in root ---"
           npm install wrangler@latest --save-dev
           npm install
         
