@@ -18,6 +18,10 @@ on:
         required: false
         type: string
         default: 'npm run build'
+      branch:
+        required: false
+        type: string
+        default: 'main'
       destroy:
         required: false
         type: boolean
@@ -110,7 +114,7 @@ jobs:
           apiToken: ${{ secrets.cloudflare-token }}
           accountId: ${{ secrets.account-id }}
           command: |
-            pages project create ${{ inputs.project-name }}
+            pages project create ${{ inputs.project-name }} --production-branch=${{ inputs.branch }}
          
 
       # Deploy
@@ -121,7 +125,7 @@ jobs:
           apiToken: ${{ secrets.cloudflare-token }}
           accountId: ${{ secrets.account-id }}
           command: |
-            pages deploy ./${{ inputs.build-directory }} --project-name ${{ inputs.project-name }}
+            pages deploy ./${{ inputs.build-directory }} --project-name ${{ inputs.project-name }} --branch ${{ inputs.branch }}
           captureOutput: true
 
       # Set output URL
