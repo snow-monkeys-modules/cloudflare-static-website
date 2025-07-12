@@ -77,7 +77,7 @@ You can review your deployed statics web pages in Cloudflare dashboard workers-a
     
 2. On the **homepage**, you’ll see the account id in the dropdown menu next to your account.
 
-![[accountid.png]]
+![Alt Text](https://github.com/snow-monkeys-modules/cloudflare-static-website/blob/main/accountid.png)
     
 3. Copy and paste into Github actions secrets.
 
