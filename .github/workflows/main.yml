@@ -22,6 +22,10 @@ on:
         required: false
         type: boolean
         default: false
+      enable-testing:
+        required: false
+        type: boolean
+        default: false
     secrets:
       account-id:
         required: true 
@@ -46,6 +50,14 @@ jobs:
       # checkout app repository
       - uses: actions/checkout@v4
 
+      - name: copy code to root for testing
+        if: ${{ inputs.enable-testing }}
+        run: |
+          cp -r ./cloudflare-static-webpage-react-vite/* .
+          echo "---- display files in root ----"
+          ls
+          echo "---- end display files in root ----"
+
       # Set up Astro & Cloudflare Pages
       - name: Setup project for astro
         if: ${{ inputs.framework == 'astro' }}
@@ -54,14 +66,11 @@ jobs:
           npx astro add cloudflare
           npm install
 
-          
+
       # Set up React & Cloudflare Pages
       - name: Setup project for react
         if: ${{ inputs.framework == 'react' }}
         run: |
-          echo "--- display files in root ---"
-          ls
-          echo "--- end display files in root ---"
           npm install wrangler@latest --save-dev
           npm install
         
