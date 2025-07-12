@@ -54,6 +54,7 @@ jobs:
           npx astro add cloudflare
           npm install
 
+          
       # Set up React & Cloudflare Pages
       - name: Setup project for react
         if: ${{ inputs.framework == 'react' }}
