@@ -109,6 +109,7 @@ jobs:
       # Create project
       - name: Create project
         continue-on-error: true
+        if: ${{ inputs.destroy == false }}
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.cloudflare-token }}
@@ -120,6 +121,7 @@ jobs:
       # Deploy
       - name: Deploy
         id: wrangler-action
+        if: ${{ inputs.destroy == false }}
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.cloudflare-token }}
@@ -131,11 +133,25 @@ jobs:
       # Set output URL
       - name: Set output URL
         id: cloud-flare
+        if: ${{ inputs.destroy == false }}
         run: |
           urls=$(echo "${{ steps.wrangler-action.outputs.command-output }}" | grep -oP 'https?://[^\s]+')
           echo "Extracted URLs: $urls"
           url1=$(echo "$urls" | sed -n '1p')
           echo "Extracted URL: $url1"
           echo "static_webpage_url=$url1" >> "$GITHUB_OUTPUT"
+
+      # Destroy
+      - name: Deploy
+        id: wrangler-action-destroy
+        if: ${{ inputs.destroy == true }}
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.cloudflare-token }}
+          accountId: ${{ secrets.account-id }}
+          command: |
+            pages project delete ${{ inputs.project-name }}
+          captureOutput: true
+
 
       # notify snow monkeys
