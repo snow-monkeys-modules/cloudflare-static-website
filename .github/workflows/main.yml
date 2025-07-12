@@ -142,7 +142,7 @@ jobs:
           echo "static_webpage_url=$url1" >> "$GITHUB_OUTPUT"
 
       # Destroy
-      - name: Deploy
+      - name: Destroy
         id: wrangler-action-destroy
         if: ${{ inputs.destroy == true }}
         uses: cloudflare/wrangler-action@v3
