@@ -64,7 +64,7 @@ jobs:
 
       # Set up Astro & Cloudflare Pages
       - name: Setup project for astro
-        if: ${{ inputs.framework == 'astro' }}
+        if: ${{ inputs.framework == 'astro' && inputs.destroy == false }}
         run: |
           npm install wrangler@latest --save-dev
           npx astro add cloudflare
@@ -73,32 +73,33 @@ jobs:
 
       # Set up React & Cloudflare Pages
       - name: Setup project for react
-        if: ${{ inputs.framework == 'react' }}
+        if: ${{ inputs.framework == 'react' && inputs.destroy == false  }}
         run: |
           npm install wrangler@latest --save-dev
           npm install
         
       # Set up Angular & Cloudflare Pages
       - name: Setup project for angular
-        if: ${{ inputs.framework == 'angular' }}
+        if: ${{ inputs.framework == 'angular' && inputs.destroy == false  }}
         run: |
           npm install
           
       # Set up Next & Cloudflare Pages
       - name: Setup project for next
-        if: ${{ inputs.framework == 'next' }}
+        if: ${{ inputs.framework == 'next' && inputs.destroy == false }}
         run: |
           npm install wrangler@latest --save-dev
           npm install
 
       # Set up Vue & Cloudflare Pages
       - name: Setup project for vue
-        if: ${{ inputs.framework == 'vue' }}
+        if: ${{ inputs.framework == 'vue' && inputs.destroy == false }}
         run: |
           npm install wrangler@latest --save-dev
           npm install
       
       - name: Build project
+        if: ${{ inputs.destroy == false }}
         run: |
           echo "Building project with command: ${{ inputs.build-command }}"
           ${{ inputs.build-command  }}
